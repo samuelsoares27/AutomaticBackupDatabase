@@ -3,28 +3,44 @@ using Microsoft.SqlServer.Management.Common;
 using Microsoft.SqlServer.Management.Smo;
 using System.Diagnostics;
 
+bool continuar = true;
 
-Console.WriteLine("Escolha a opção:");
-Console.WriteLine("1. Backup de PostgreSQL");
-Console.WriteLine("2. Backup de SQL Server");
-
-var escolha = Console.ReadLine();
-
-switch (escolha)
+if (!Directory.Exists(@"C:\temp\"))
 {
-    case "1":
-        FazerBackupPostgreSQL();
-        break;
-
-    case "2":
-        FazerBackupSQLServer();
-        break;
-
-    default:
-        Console.WriteLine("Opção inválida. Por favor, escolha 1 ou 2.");
-        break;
+    Directory.CreateDirectory(@"C:\temp\");
 }
 
+while (continuar)
+{
+
+    Console.WriteLine("Escolha a opção:");
+    Console.WriteLine("1. Backup de PostgreSQL");
+    Console.WriteLine("2. Backup de SQL Server");
+    Console.WriteLine("3. Sair");
+
+    var escolha = Console.ReadLine();
+
+    switch (escolha)
+    {
+        case "1":
+            FazerBackupPostgreSQL();
+            break;
+
+        case "2":
+            FazerBackupSQLServer();
+            break;
+
+        case "3":
+            Console.WriteLine("Você escolheu sair. O programa será encerrado.");
+            continuar = false; // Definir a flag para false para sair do loop
+            break;
+
+        default:
+            Console.WriteLine("Opção inválida. Por favor, escolha 1 ou 2.");
+            break;
+    }
+
+}
 
 
 static void FazerBackupPostgreSQL()
@@ -45,11 +61,6 @@ static void FazerBackupPostgreSQL()
         string pgDumpPath = @"C:\Program Files\PostgreSQL\15\bin\pg_dump.exe";
 
         Console.WriteLine("Fazendo backup de PostgreSQL...");
-
-        if (!Directory.Exists(backupPath))
-        {
-            Directory.CreateDirectory(backupPath);
-        }
 
         Environment.SetEnvironmentVariable("PGPASSWORD", password);
 
@@ -100,11 +111,6 @@ static void FazerBackupSQLServer()
         string backupPath = @"C:\temp\";
         string backupFileName = $"Backup_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.bak";
         string fullPath = System.IO.Path.Combine(backupPath, $"Backup_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.bak");
-
-        if (!Directory.Exists(backupPath))
-        {
-            Directory.CreateDirectory(backupPath);
-        }
 
         Console.WriteLine("Fazendo backup de SQL Server...");
 
