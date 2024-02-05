@@ -93,13 +93,20 @@ static void FazerBackupSQLServer()
 
     try
     {
-        Console.WriteLine("Fazendo backup de SQL Server...");
+        
 
         string serverName = "SAMUEL\\SQLSERVER2022";
         string databaseName = "Db99";
         string backupPath = @"C:\temp\";
         string backupFileName = $"Backup_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.bak";
         string fullPath = System.IO.Path.Combine(backupPath, $"Backup_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.bak");
+
+        if (!Directory.Exists(backupPath))
+        {
+            Directory.CreateDirectory(backupPath);
+        }
+
+        Console.WriteLine("Fazendo backup de SQL Server...");
 
         ServerConnection serverConnection = new ServerConnection(serverName);
         Server sqlServer = new Server(serverConnection);
